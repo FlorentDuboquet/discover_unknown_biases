@@ -2,10 +2,22 @@ import os
 import torch
 import argparse
 import sys
+import os
 
-from torchvision import transforms
+path = os.getcwd()
+
+# print(sys.path)
+sys.path.append(path)
+# importing
 from dataset.dsprites import dSprites
 from dataset.disentanglement_lib_datasets import BiasedDisentanglementLibDataset
+
+
+
+from torchvision import transforms
+
+#from dataset.dsprites import dSprites
+#from ../dataset.disentanglement_lib_datasets import BiasedDisentanglementLibDataset
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 from architectures.encoders.simple_conv64 import SimpleConv64
@@ -76,6 +88,7 @@ class Trainer:
                 sys.exit(0)
 
 
+
 def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('--bias_attr_index', type=int, required=True)
@@ -91,14 +104,18 @@ def get_args():
     parser.add_argument('--ckpt_dir', type=str,
                         default='ckpt/synthetic/classifier')
     parser.add_argument('--bias_degree', type=float, default=0.1)
+
     args = parser.parse_args()
+    print(args.ckpt_dir)
     assert os.path.exists(args.ckpt_dir)
     return args
 
 
 if __name__ == '__main__':
+
     args = get_args()
     set_environment_variables(args.dset_dir, args.dset_name)
     trainer = Trainer(args)
     for e in range(1, args.epoch + 1):
         trainer.train(e)
+
